@@ -62,7 +62,7 @@ public class CustomerController {
 
     private Customer update(Customer oldCustomer, Customer newCustomer) {
         checkValues(newCustomer, true);
-        BeanUtils.copyProperties(newCustomer, oldCustomer, "id", "created", "updated", "isActive");
+        BeanUtils.copyProperties(newCustomer, oldCustomer, "id", "created", "updated", "active");
         oldCustomer.setUpdated(Instant.now().toEpochMilli());
         return customerRepository.save(oldCustomer);
     }
