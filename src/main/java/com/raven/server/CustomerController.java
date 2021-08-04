@@ -43,19 +43,28 @@ public class CustomerController {
     }
 
     @PutMapping("{id}")
+    @JsonView(Views.MainView.class)
+    public Customer putUpdate(@PathVariable("id") Customer customerFromDb, @RequestBody Customer newCustomer) {
+        return update(customerFromDb, newCustomer);
+    }
+
     @PatchMapping("{id}")
     @JsonView(Views.MainView.class)
-    public Customer update(@PathVariable("id") Customer customerFromDb, @RequestBody Customer newCustomer) {
-        checkValues(newCustomer, true);
-        BeanUtils.copyProperties(newCustomer, customerFromDb, "id", "created", "updated", "isActive");
-        customerFromDb.setUpdated(Instant.now().toEpochMilli());
-        return customerRepository.save(customerFromDb);
+    public Customer pathUpdate(@PathVariable("id") Customer customerFromDb, @RequestBody Customer newCustomer) {
+        return update(customerFromDb, newCustomer);
     }
 
     @DeleteMapping("{id}")
     public void deactivate(@PathVariable("id") Customer customerFromDb) {
         customerFromDb.setActive(false);
         customerRepository.save(customerFromDb);
+    }
+
+    private Customer update(Customer oldCustomer, Customer newCustomer) {
+        checkValues(newCustomer, true);
+        BeanUtils.copyProperties(newCustomer, oldCustomer, "id", "created", "updated", "isActive");
+        oldCustomer.setUpdated(Instant.now().toEpochMilli());
+        return customerRepository.save(oldCustomer);
     }
 
     private void checkValues(Customer customer, boolean phoneRequired) {
