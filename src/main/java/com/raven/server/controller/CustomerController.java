@@ -1,10 +1,11 @@
-package com.raven.server;
+package com.raven.server.controller;
+
+import com.raven.server.model.Customer;
+import com.raven.server.model.Views;
+import com.raven.server.repository.CustomerRepository;
+import com.raven.server.exception.IllegalValueException;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.raven.server.data.elements.Customer;
-import com.raven.server.data.elements.Views;
-import com.raven.server.data.repos.CustomerRepository;
-import com.raven.server.exceptions.IllegalValueException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 

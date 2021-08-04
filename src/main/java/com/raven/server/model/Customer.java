@@ -1,4 +1,4 @@
-package com.raven.server.data.elements;
+package com.raven.server.model;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.*;
