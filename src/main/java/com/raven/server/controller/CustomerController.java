@@ -36,8 +36,8 @@ public class CustomerController {
 
     @PostMapping
     @JsonView(Views.MainView.class)
-    public Customer add(@RequestBody Customer customer) {
-        checkValues(customer, false);
+    public Customer add(@RequestBody Customer customer) { // может, возвращать ResponseEntity<String>?
+        validatePhone(customer.getPhone(), false);
         customer.setCreated(Instant.now().toEpochMilli());
         customer.setActive(true);
         return customerRepository.save(customer);
@@ -62,25 +62,13 @@ public class CustomerController {
     }
 
     private Customer update(Customer oldCustomer, Customer newCustomer) {
-        checkValues(newCustomer, true);
+        validatePhone(newCustomer.getPhone(), true);
         BeanUtils.copyProperties(newCustomer, oldCustomer, "id", "created", "updated", "active");
         oldCustomer.setUpdated(Instant.now().toEpochMilli());
         return customerRepository.save(oldCustomer);
     }
 
-    private void checkValues(Customer customer, boolean phoneRequired) {
-        String fullName = customer.getFullName();
-        String email = customer.getEmail();
-        String phone = customer.getPhone();
-
-        if (fullName.length() < 2 || 50 < fullName.length()) {
-            throw new IllegalValueException();
-        }
-
-        if (email.length() < 2 || 100 < email.length() || !email.contains("@")) {
-            throw new IllegalValueException();
-        }
-
+    private void validatePhone(String phone, boolean phoneRequired) {
         if ((phoneRequired && phone == null) || phone != null && !phone.matches("^\\+?[0-9]{6,14}$")) {
             throw new IllegalValueException();
         }
