@@ -3,7 +3,6 @@ package com.raven.server.controller;
 import com.raven.server.model.Customer;
 import com.raven.server.model.Views;
 import com.raven.server.repository.CustomerRepository;
-import com.raven.server.exception.IllegalValueException;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.BeanUtils;
@@ -37,6 +36,9 @@ public class CustomerController {
     @PostMapping
     @JsonView(Views.MainView.class)
     public Customer add(@RequestBody Customer customer) { // может, возвращать ResponseEntity<String>?
+        if ((customer.getEmail() == null)) {
+            throw new IllegalArgumentException("Email cannot be null");
+        }
         customer.setCreated(Instant.now().toEpochMilli());
         customer.setActive(true);
         return customerRepository.save(customer);
@@ -62,7 +64,7 @@ public class CustomerController {
 
     private Customer update(Customer oldCustomer, Customer newCustomer) {
         if ((newCustomer.getPhone() == null)) {
-            throw new IllegalValueException();
+            throw new IllegalArgumentException("Phone cannot be null");
         }
         BeanUtils.copyProperties(newCustomer, oldCustomer, "id", "created", "updated", "active");
         oldCustomer.setUpdated(Instant.now().toEpochMilli());
