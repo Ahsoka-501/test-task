@@ -8,7 +8,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 @Entity
 @Table
@@ -24,12 +23,13 @@ public class Customer {
     @JsonView(Views.MainView.class)
     private long id;
 
-    @Size(min = 2, max = 50)
+    @NotBlank
+    @Length(min = 2, max = 50)
     @JsonView(Views.MainView.class)
     private String fullName;
 
     @Email
-    @Size(min = 2, max = 100)
+    @Length(min = 2, max = 100)
     @JsonView(Views.MainView.class)
     private String email;
 

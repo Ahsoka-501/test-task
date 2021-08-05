@@ -23,19 +23,19 @@ public class CustomerController {
 
     @GetMapping
     @JsonView(Views.MainView.class)
-    public List<Customer> list() {
+    public List<Customer> getList() {
         return customerRepository.findAll();
     }
 
     @GetMapping("{id}")
     @JsonView(Views.MainView.class)
-    public Customer getByID(@PathVariable("id") Customer customer) {
+    public Customer getOne(@PathVariable("id") Customer customer) {
         return customer;
     }
 
     @PostMapping
     @JsonView(Views.MainView.class)
-    public Customer add(@RequestBody Customer customer) { // может, возвращать ResponseEntity<String>?
+    public Customer add(@RequestBody Customer customer) {
         if ((customer.getEmail() == null)) {
             throw new IllegalArgumentException("Email cannot be null");
         }
@@ -46,14 +46,14 @@ public class CustomerController {
 
     @PutMapping("{id}")
     @JsonView(Views.MainView.class)
-    public Customer putUpdate(@PathVariable("id") Customer customerFromDb, @RequestBody Customer newCustomer) {
-        return update(customerFromDb, newCustomer);
+    public Customer putUpdate(@PathVariable("id") Customer oldCustomer, @RequestBody Customer newCustomer) {
+        return update(oldCustomer, newCustomer);
     }
 
     @PatchMapping("{id}")
     @JsonView(Views.MainView.class)
-    public Customer pathUpdate(@PathVariable("id") Customer customerFromDb, @RequestBody Customer newCustomer) {
-        return update(customerFromDb, newCustomer);
+    public Customer pathUpdate(@PathVariable("id") Customer oldCustomer, @RequestBody Customer newCustomer) {
+        return update(oldCustomer, newCustomer);
     }
 
     @DeleteMapping("{id}")
@@ -66,7 +66,7 @@ public class CustomerController {
         if ((newCustomer.getPhone() == null)) {
             throw new IllegalArgumentException("Phone cannot be null");
         }
-        BeanUtils.copyProperties(newCustomer, oldCustomer, "id", "created", "updated", "active");
+        BeanUtils.copyProperties(newCustomer, oldCustomer, "id", "email", "created", "updated", "active");
         oldCustomer.setUpdated(Instant.now().toEpochMilli());
         return customerRepository.save(oldCustomer);
     }
