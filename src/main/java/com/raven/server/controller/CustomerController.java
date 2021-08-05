@@ -36,7 +36,7 @@ public class CustomerController {
     @PostMapping
     @JsonView(Views.MainView.class)
     public Customer add(@RequestBody Customer customer) {
-        if ((customer.getEmail() == null)) {
+        if (customer.getEmail() == null) {
             throw new IllegalArgumentException("Email cannot be null");
         }
         customer.setCreated(Instant.now().toEpochMilli());
@@ -63,7 +63,7 @@ public class CustomerController {
     }
 
     private Customer update(Customer oldCustomer, Customer newCustomer) {
-        if ((newCustomer.getPhone() == null)) {
+        if (newCustomer.getPhone() == null) {
             throw new IllegalArgumentException("Phone cannot be null");
         }
         BeanUtils.copyProperties(newCustomer, oldCustomer, "id", "email", "created", "updated", "active");
