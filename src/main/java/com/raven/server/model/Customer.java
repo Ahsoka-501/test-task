@@ -2,9 +2,12 @@ package com.raven.server.model;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -30,6 +33,7 @@ public class Customer {
     @JsonView(Views.MainView.class)
     private String email;
 
+    @Pattern(regexp = "^\\+?[0-9]{6,14}$")
     @JsonView(Views.MainView.class)
     private String phone;
 
